@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create and Assign Defects</title>
+</head>
+<body>
+    <h1>Current Active Defects</h1>
+    <table border =1 id="defectTable">
+        <thead>
+         <tr>
+            <th>Defect ID</th>
+            <th>Assigned To</th>
+            <th>Status</th>
+            <th>Defect Name</th>
+            <th>Priority</th>
+
+        </tr>
+        </thead>
+            <tbody id="tableDefectBody">
+            <tr>
+        </tr>
+    </tbody>
+</table>
+<h1>Create a Defect</h1>
+<input type="text" placeholder="Assign To" id="assignTo">
+<br>
+<input type="text" placeholder="Defect Name" id="defectName">
+<br>
+<input type="text" placeholder="Priority" id="priority">
+<br>
+<button onclick="createDefect()">Create Defect</button>
+</body>
+<script>
+    const myDefectApi = "https://bugcatcher.coe.revaturelabs.com/3/defects";
+const tableDefectBody = document.getElementById('tableDefectBody');
+fetch(myDefectApi)
+    .then(response => response.json())
+    .then(defects =>{
+        const stringifiedApi = defects.reduce((itemsToRenderInTable, defect) => {
+            return (
+                itemsToRenderInTable +
+             `
+    <tr>   
+        <td>${defect.defectId}</td>
+        <td>${defect.assignedTo}</td>
+        <td>${defect.status}</td>
+        <td>${defect.desc}</td> 
+        <td>${defect.priority}</td>
+    </tr>
+            `
+        );
+        }, '');
+tableDefectBody.innerHTML = stringifiedApi;            
+    })
+    .catch(console.error);
+
+let data = {assignedTo:"assignTo",
+            desc:"defectName",
+            priority:"priority"};
+async function createDefect(e){
+    fetch(myDefectApi, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then(res => {
+        console.log("Resquest complete! Response:", res);
+    });
+    
+}
+
+</script>
+</html>

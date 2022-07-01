@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login Page</title>
+    <h1>Login Page :)</h1>
+</head>
+<body>
+    <input type="text" placeholder="USERNAME" id="username">
+    <br>
+    <input type="password" placeholder="PASSWORD" id="password">
+    <br>
+    <button onclick="login()">LOGIN</button>
+</body>
+<script>
+    async function login(){
+        //need to attached the username and password
+        let loginInfo = {
+            username: document.getElementById("username").value,
+            password: document.getElementById("password").value
+        }
+
+        //need to convet the login information to JSON
+        let loginJSON = JSON.stringify(loginInfo);
+
+        //now I can set up my HTTP request configurations
+        let config = {
+            method:"PATCH", //method ia a reference to the kind of reqeust you are making (the verb): GET is the default
+            headers:{'Content-Type':"application/json"}, //some API's will return an error message without this value included
+            body: loginJSON
+        }
+
+        let httpResponse = await fetch("https://bugcatcher.coe.revaturelabs.com/3/login",config)
+
+        if(httpResponse.status === 200){
+            let responseBody = await httpResponse.json();
+
+            if(responseBody.role === "Tester"){
+                window.location.href = "testerPage.html";
+            } else if(responseBody.role === "Manager"){
+                window.location.href = "managerPage.html";
+            } else {
+                alert(responseBody.detail);
+            }
+        } else {
+            let responseBody = await httpResponse.json();
+            alert(responseBody.detail);
+        }
+      
+
+
+    }
+
+</script>
+</html>

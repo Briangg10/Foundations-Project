@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creating A Employee</title>
+</head>
+<body>
+    <input type="text" placeholder="Username" id="username1">
+    <br>
+    <input type="password" placeholder="Password" id="password1">
+    <br>
+    <input type="text" placeholder="First Name" id="firstName">
+    <br>
+    <input type="text" placeholder="Last Name" id="lastName">
+    <br>
+    <input type="text" placeholder="Role" id="role">
+    <button onclick="createEmployee()">Create Employee</button>
+</body>
+<script>
+        async function createEmployee(){
+        //need to attached the username and password and  first name and last name and role
+        let employeeInfo = {
+            username: document.getElementById("username1").value,
+            password: document.getElementById("password1").value,
+            fname: document.getElementById("firstName").value,
+            lname: document.getElementById("lastName").value
+        }
+
+        //need to convet the login information to JSON
+        let createEmployeeJSON = JSON.stringify(employeeInfo);
+
+        //now I can set up my HTTP request configurations
+        let config = {
+            method:"PUT", //method ia a reference to the kind of reqeust you are making (the verb): GET is the default
+            headers:{'Content-Type':"application/json"}, //some API's will return an error message without this value included
+            body: createEmployeeJSON
+        }
+
+        let httpResponse = await fetch("https://bugcatcher.coe.revaturelabs.com/3/employees", config)
+
+        if(httpResponse.status === 200){
+            let responseBody = await httpResponse.json();
+
+            if(responseBody.role === "Tester"){
+                alert("you created a tester");
+            } else if(responseBody.role === "Manager"){
+                alert("you created a manager");
+            } else {
+                alert(responseBody.detail);
+            }
+        } else {
+            let responseBody = await httpResponse.json();
+            alert(responseBody.detail);
+        }
+        }
+</script>
+</html>

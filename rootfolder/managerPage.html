@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Manager Page</title>
+    <h1>Manager Page</h1>
+
+</head>
+<body>
+    <p>Welcome to the Manager Page!</p>
+    <h1>Current Active Employees</h1>
+    <table border =1 id="employeeTable">
+        <thead>
+         <tr>
+            <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Role</th>
+
+        </tr>
+        </thead>
+            <tbody id="tableEmployeeBody">
+            <tr>
+        </tr>
+    </tbody>
+</table>
+<button onclick="createEmployeeWindow()">Create Employee</button>
+<button onclick="viewDefects()">Create & Assign Defects</button>
+</body>
+
+<script>
+const myApi = "https://bugcatcher.coe.revaturelabs.com/3/employees";
+const tableEmployeeBody = document.getElementById('tableEmployeeBody');
+fetch(myApi)
+    .then(response => response.json())
+    .then(employees =>{
+        const stringifiedApi = employees.reduce((itemsToRenderInTable, employees) => {
+            return (
+                itemsToRenderInTable +
+             `
+    <tr>   
+        <td>${employees.username}</td>
+        <td>${employees.fname}</td>
+        <td>${employees.lname}</td>
+        <td>${employees.role}</td> 
+    </tr>
+            `
+        );
+        }, '');
+tableEmployeeBody.innerHTML = stringifiedApi;            
+    })
+    .catch(console.error);
+
+ async function createEmployeeWindow(){
+    window.location.href = "creatingEmployee.html";
+}
+async function viewDefects(){
+    window.location.href = "viewDefects.html";
+}
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Tester Page</title>
+    <h1>Tester Page</h1>
+</head>
+<body>
+    <H1>Welcome to the Tester Page!</H1>
+    <h1>These are the defects assigned to me</h1>
+    <table border =1 id="defectTable">
+        <thead>
+         <tr>
+            <th>Defect ID</th>
+            <th>Assigned To</th>
+            <th>Status</th>
+            <th>Defect Name</th>
+            <th>Priority</th>
+
+        </tr>
+        </thead>
+            <tbody id="tableDefectBody">
+            <tr>
+        </tr>
+    </tbody>
+</table>
+</body>
+<script>
+const myDefectApi = "https://bugcatcher.coe.revaturelabs.com/3/defects";
+const tableDefectBody = document.getElementById('tableDefectBody');
+fetch(myDefectApi)
+    .then(response => response.json())
+    .then(defects =>{
+        const stringifiedApi = defects.reduce((itemsToRenderInTable, defect) => {
+            return (
+                itemsToRenderInTable +
+             `
+    <tr>   
+        <td>${defect.defectId}</td>
+        <td>${defect.assignedTo}</td>
+        <td>${defect.status}</td>
+        <td>${defect.desc}</td> 
+        <td>${defect.priority}</td>
+    </tr>
+            `
+        );
+        }, '');
+tableDefectBody.innerHTML = stringifiedApi;            
+    })
+    .catch(console.error);
+    
+
+
+
+</script>
+</html>
